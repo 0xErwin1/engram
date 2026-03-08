@@ -12,6 +12,7 @@ package tui
 import (
 	"github.com/Gentleman-Programming/engram/internal/setup"
 	"github.com/Gentleman-Programming/engram/internal/store"
+	"github.com/Gentleman-Programming/engram/internal/version"
 
 	"github.com/charmbracelet/bubbles/spinner"
 	"github.com/charmbracelet/bubbles/textinput"
@@ -36,6 +37,10 @@ const (
 )
 
 // ─── Custom Messages ─────────────────────────────────────────────────────────
+
+type updateAvailableMsg struct {
+	msg string
+}
 
 type statsLoadedMsg struct {
 	stats *store.Stats
@@ -89,6 +94,9 @@ type Model struct {
 	Height     int
 	Cursor     int
 	Scroll     int
+
+	// Update notification
+	UpdateMsg string
 
 	// Error display
 	ErrorMsg string
@@ -154,11 +162,18 @@ func New(s *store.Store, version string) Model {
 func (m Model) Init() tea.Cmd {
 	return tea.Batch(
 		loadStats(m.store),
+		checkForUpdate(m.Version),
 		tea.EnterAltScreen,
 	)
 }
 
 // ─── Commands (data loading) ─────────────────────────────────────────────────
+
+func checkForUpdate(v string) tea.Cmd {
+	return func() tea.Msg {
+		return updateAvailableMsg{msg: version.CheckLatest(v)}
+	}
+}
 
 func loadStats(s *store.Store) tea.Cmd {
 	return func() tea.Msg {

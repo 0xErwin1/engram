@@ -48,6 +48,12 @@ var (
 			Foreground(colorRed).
 			Bold(true).
 			Padding(0, 1)
+
+	// Update available banner
+	updateBannerStyle = lipgloss.NewStyle().
+				Foreground(colorYellow).
+				Bold(true).
+				Padding(0, 1)
 )
 
 // ─── Dashboard Styles ────────────────────────────────────────────────────────

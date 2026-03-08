@@ -40,6 +40,7 @@ import (
 	"github.com/Gentleman-Programming/engram/internal/store"
 	engramsync "github.com/Gentleman-Programming/engram/internal/sync"
 	"github.com/Gentleman-Programming/engram/internal/tui"
+	versioncheck "github.com/Gentleman-Programming/engram/internal/version"
 
 	tea "github.com/charmbracelet/bubbletea"
 	mcpserver "github.com/mark3labs/mcp-go/server"
@@ -62,6 +63,8 @@ var (
 	newTUIModel   = func(s *store.Store) tui.Model { return tui.New(s, version) }
 	newTeaProgram = tea.NewProgram
 	runTeaProgram = (*tea.Program).Run
+
+	checkForUpdates = versioncheck.CheckLatest
 
 	setupSupportedAgents        = setup.SupportedAgents
 	setupInstallAgent           = setup.Install
@@ -112,6 +115,12 @@ func main() {
 	if len(os.Args) < 2 {
 		printUsage()
 		exitFunc(1)
+	}
+
+	// Check for updates on every invocation (2s timeout, silent on failure).
+	if msg := checkForUpdates(version); msg != "" {
+		fmt.Fprintln(os.Stderr, msg)
+		fmt.Fprintln(os.Stderr)
 	}
 
 	cfg := store.DefaultConfig()

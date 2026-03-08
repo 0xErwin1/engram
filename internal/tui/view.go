@@ -99,6 +99,12 @@ func (m Model) viewDashboard() string {
 	b.WriteString(renderLogo(m.Version))
 	b.WriteString("\n")
 
+	// Update notification
+	if m.UpdateMsg != "" {
+		b.WriteString(updateBannerStyle.Render(m.UpdateMsg))
+		b.WriteString("\n\n")
+	}
+
 	// Stats card
 	if m.Stats != nil {
 		statsContent := fmt.Sprintf(
