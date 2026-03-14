@@ -53,6 +53,68 @@ brew update && brew upgrade engram
 > brew uninstall --cask engram 2>/dev/null; brew install gentleman-programming/tap/engram
 > ```
 
+### Install via Nix
+
+Run directly without installing:
+
+```bash
+nix run github:Gentleman-Programming/engram
+````
+
+Build locally:
+
+```bash
+nix build
+./result/bin/engram
+```
+
+Enter a development shell:
+
+```bash
+nix develop
+```
+
+<details>
+<summary>Home Manager / NixOS integration</summary>
+
+You can also add Engram from this repository flake into your own Nix configuration.
+
+#### As a flake input
+
+```nix
+{
+  inputs.engram.url = "github:Gentleman-Programming/engram";
+}
+```
+
+#### Home Manager
+
+```nix
+{ inputs, pkgs, ... }:
+
+{
+  home.packages = [
+    inputs.engram.packages.${pkgs.system}.default
+  ];
+}
+```
+
+#### NixOS
+
+```nix
+{ inputs, pkgs, ... }:
+
+{
+  environment.systemPackages = [
+    inputs.engram.packages.${pkgs.system}.default
+  ];
+}
+```
+
+This makes the `engram` binary available in your environment without installing Go manually.
+
+</details>
+
 ### Install on Windows
 
 **Option A: Download the binary (recommended)**

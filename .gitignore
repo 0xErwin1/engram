@@ -26,3 +26,6 @@ Thumbs.db
 .codex/skills
 .github/skills
 .gemini/skills
+
+# Nix output
+result
