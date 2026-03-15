@@ -41,15 +41,30 @@ Use this skill when:
 
 ---
 
-## Branch Naming
+## Branch Naming (enforced by GitHub ruleset)
+
+Branch names are validated by a GitHub ruleset. Pushes that don't match **will be rejected**.
+
+**Pattern:** `^(feat|fix|chore|docs|style|refactor|perf|test|build|ci|revert)\/[a-z0-9._-]+$`
 
 | Type | Branch pattern | Example |
 |------|---------------|---------|
-| Bug fix | `fix/<short-description>` | `fix/duplicate-observation-insert` |
-| Feature | `feat/<short-description>` | `feat/json-export-command` |
-| Docs | `docs/<short-description>` | `docs/api-reference-update` |
-| Refactor | `refactor/<short-description>` | `refactor/extract-query-sanitizer` |
-| Chore | `chore/<short-description>` | `chore/bump-bubbletea-v0.26` |
+| Feature | `feat/<description>` | `feat/json-export-command` |
+| Bug fix | `fix/<description>` | `fix/duplicate-observation-insert` |
+| Chore | `chore/<description>` | `chore/bump-bubbletea-v0.26` |
+| Docs | `docs/<description>` | `docs/api-reference-update` |
+| Style | `style/<description>` | `style/fix-tui-alignment` |
+| Refactor | `refactor/<description>` | `refactor/extract-query-sanitizer` |
+| Performance | `perf/<description>` | `perf/optimize-fts5-queries` |
+| Test | `test/<description>` | `test/add-sync-coverage` |
+| Build | `build/<description>` | `build/update-go-toolchain` |
+| CI | `ci/<description>` | `ci/split-e2e-job` |
+| Revert | `revert/<description>` | `revert/broken-migration` |
+
+**Rules:**
+- Description MUST be lowercase
+- Only `a-z`, `0-9`, `.`, `_`, `-` allowed in description
+- No uppercase, no spaces, no special characters
 
 ---
 
@@ -124,31 +139,63 @@ All boxes must be checked:
 
 ---
 
-## Conventional Commits
+## Conventional Commits (enforced by GitHub ruleset)
 
+Commit messages are validated by a GitHub ruleset. Commits that don't match **will be rejected**.
+
+**Pattern:** `^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([a-z0-9\._-]+\))?!?: .+`
+
+**Format:**
 ```
-<type>(<scope>): <short description>
+<type>(<optional-scope>): <description>
+<type>(<optional-scope>)!: <description>   ← breaking change
 ```
 
-Type-to-label mapping:
+### Allowed types
 
-| Commit type | PR label |
-|-------------|----------|
-| `feat` | `type:feature` |
-| `fix` | `type:bug` |
-| `docs` | `type:docs` |
-| `refactor` | `type:refactor` |
-| `chore` | `type:chore` |
-| `feat!` / `fix!` | `type:breaking-change` |
+| Type | Purpose | PR label |
+|------|---------|----------|
+| `feat` | New feature | `type:feature` |
+| `fix` | Bug fix | `type:bug` |
+| `docs` | Documentation only | `type:docs` |
+| `refactor` | Code refactoring | `type:refactor` |
+| `chore` | Maintenance, deps | `type:chore` |
+| `style` | Formatting, whitespace | `type:chore` |
+| `perf` | Performance improvement | `type:refactor` |
+| `test` | Adding/fixing tests | `type:chore` |
+| `build` | Build system changes | `type:chore` |
+| `ci` | CI/CD changes | `type:chore` |
+| `revert` | Revert previous commit | *(match original type)* |
+| `feat!` / `fix!` | Breaking change | `type:breaking-change` |
 
-Examples:
+### Rules
+- Type MUST be one of the listed values
+- Scope is optional, lowercase, allows `a-z`, `0-9`, `.`, `_`, `-`
+- `!` before `:` marks a breaking change
+- Description MUST start after `: ` (colon + space)
+
+### Examples
 ```
 feat(cli): add --json flag to session list command
 fix(store): prevent duplicate observation insert on retry
 docs(contributing): update workflow documentation
 refactor(internal): extract search query sanitizer
 chore(deps): bump github.com/charmbracelet/bubbletea to v0.26
+style(tui): fix alignment in session detail view
+perf(store): optimize FTS5 query for large datasets
+test(sync): add coverage for conflict resolution
+ci(workflows): split e2e into separate job
 fix!: change session ID format
+```
+
+### Invalid examples (will be rejected)
+```
+Fix bug                          ← no type prefix
+feat: Add login                  ← description should be lowercase
+FEAT(cli): add flag              ← type must be lowercase
+feat (cli): add flag             ← no space before scope
+feat(CLI): add flag              ← scope must be lowercase
+update docs                      ← no conventional commit format
 ```
 
 ---
