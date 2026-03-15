@@ -1,0 +1,46 @@
+name: Feature Request
+description: Suggest a new feature or improvement for engram
+labels: ["enhancement", "status:needs-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement! Please describe your idea clearly.
+        **Note:** A maintainer must add the `status:approved` label before a PR implementing this feature will be accepted.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Description
+      description: What problem does this feature solve? Be specific about the pain point.
+      placeholder: |
+        I'm always frustrated when... / It's currently not possible to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution you'd like. How should it work from the user's perspective?
+      placeholder: |
+        I'd like engram to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you considered any alternative approaches or workarounds?
+      placeholder: I also considered...
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other context, mockups, or examples that help explain the request.
+    validations:
+      required: false
