@@ -18,7 +18,7 @@
         pkgs = import nixpkgs { inherit system; };
 
         pname = "engram";
-        version = "1.10.0";
+        version = "1.10.1";
 
         engram = pkgs.buildGoModule {
           inherit pname;
