@@ -98,20 +98,18 @@ This makes the `engram` binary available in your environment without installing 
 
 ## Windows
 
-**Option A: Download the binary (recommended)**
+**Option A: Install via `go install` (recommended for technical users)**
 
-1. Go to [GitHub Releases](https://github.com/Gentleman-Programming/engram/releases)
-2. Download `engram_<version>_windows_amd64.zip` (or `arm64` for ARM devices)
-3. Extract `engram.exe` to a folder in your `PATH` (e.g. `C:\Users\<you>\bin\`)
+If you have Go installed, this is the cleanest and most trustworthy path — the binary is compiled on your machine from source, so no antivirus will flag it:
 
 ```powershell
-# Example: extract and add to PATH (PowerShell)
-Expand-Archive engram_*_windows_amd64.zip -DestinationPath "$env:USERPROFILE\bin"
-# Add to PATH permanently (run once):
-[Environment]::SetEnvironmentVariable("Path", "$env:USERPROFILE\bin;" + [Environment]::GetEnvironmentVariable("Path", "User"), "User")
+go install github.com/Gentleman-Programming/engram/cmd/engram@latest
+# Binary goes to %GOPATH%\bin\engram.exe (typically %USERPROFILE%\go\bin\)
 ```
 
-**Option B: Install from source**
+Ensure `%GOPATH%\bin` (or `%USERPROFILE%\go\bin`) is on your `PATH`.
+
+**Option B: Build from source**
 
 ```powershell
 git clone https://github.com/Gentleman-Programming/engram.git
@@ -124,7 +122,40 @@ $v = git describe --tags --always
 go build -ldflags="-X main.version=local-$v" -o engram.exe ./cmd/engram
 ```
 
-> **Windows notes:**
+**Option C: Download the prebuilt binary**
+
+1. Go to [GitHub Releases](https://github.com/Gentleman-Programming/engram/releases)
+2. Download `engram_<version>_windows_amd64.zip` (or `arm64` for ARM devices)
+3. Extract `engram.exe` to a folder in your `PATH` (e.g. `C:\Users\<you>\bin\`)
+
+```powershell
+# Example: extract and add to PATH (PowerShell)
+Expand-Archive engram_*_windows_amd64.zip -DestinationPath "$env:USERPROFILE\bin"
+# Add to PATH permanently (run once):
+[Environment]::SetEnvironmentVariable("Path", "$env:USERPROFILE\bin;" + [Environment]::GetEnvironmentVariable("Path", "User"), "User")
+```
+
+> **Antivirus false positives on prebuilt binaries**
+>
+> Windows Defender and other antivirus tools (ESET, Brave's built-in scanner) have flagged some
+> engram prebuilt releases as malware (`Trojan:Script/Wacatac.H!ml` or similar). This is a
+> **heuristic false positive**. The binary is built reproducibly from the public source code
+> via GoReleaser and contains no malicious code.
+>
+> **Why does this happen?** Prebuilt binaries from small open-source projects are unsigned (code
+> signing certificates cost hundreds of dollars per year). Many AV engines automatically flag
+> unsigned executables from unknown publishers, especially recently compiled Go binaries. The
+> same alert has been observed on Claude Code's own MSIX installer, which confirms this is an
+> AV heuristic issue, not a code problem.
+>
+> **Maintainer stance:** We will not pay for a code signing certificate at this time. This is a
+> distribution trust problem, not a security problem. The source code is fully auditable.
+>
+> **Recommended workaround:** Technical Windows users should prefer **Option A (`go install`)** or
+> **Option B (build from source)**. Binaries you compile locally will not trigger AV alerts because
+> they originate from your own machine.
+
+> **Other Windows notes:**
 > - Data is stored in `%USERPROFILE%\.engram\engram.db`
 > - Override with `ENGRAM_DATA_DIR` environment variable
 > - All core features work natively: CLI, MCP server, TUI, HTTP API, Git Sync
